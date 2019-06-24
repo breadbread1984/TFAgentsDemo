@@ -6,7 +6,7 @@ from tf_agents.networks import q_network; # qnet structure
 from tf_agents.agents.dqn import dqn_agent; # dqn agent
 from tf_agents.trajectories import trajectory; # trajectory
 from tf_agents.replay_buffers import tf_uniform_replay_buffer; # replay buffer
-from tf_agents.policies import random_tf_policy; # random policy
+from tf_agents.policies import random_tf_policy, policy_saver; # random policy
 
 batch_size = 64;
 
@@ -35,6 +35,8 @@ def main():
     # shape = batch x 2 x
     dataset = replay_buffer.as_dataset(num_parallel_calls = 3, sample_batch_size = batch_size, num_steps = 2).prefetch(3);
     iterator = iter(dataset);
+    # policy saver
+    saver = policy_saver.PolicySaver(tf_agent.policy);
     # training
     for train_iter in range(20000):
         # collect initial trajectory to avoid a cold start
@@ -59,6 +61,8 @@ def main():
         if tf_agent.train_step_counter.numpy() % 200 == 0:
             print('step = {0}: loss = {1}'.format(tf_agent.train_step_counter.numpy(), train_loss.loss));
         if tf_agent.train_step_counter.numpy() % 1000 == 0:
+            # save policy
+            saver.save('checkpoints/policy_%d' % tf_agent.train_step_counter.numpy());
             # get the average return for the updated policy
             total_return = 0.0;
             for _ in range(10):
