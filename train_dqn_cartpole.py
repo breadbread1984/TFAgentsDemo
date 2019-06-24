@@ -37,10 +37,9 @@ def main():
     iterator = iter(dataset);
     # training
     for train_iter in range(20000):
-        # collect initial trajectory
+        # collect initial trajectory to avoid a cold start
         if train_iter == 0:
-            random_policy = random_tf_policy.RandomTFPolicy(train_env.time_step_spec(),
-                                                            train_env.action_spec());
+            random_policy = random_tf_policy.RandomTFPolicy(train_env.time_step_spec(), train_env.action_spec());
             for _ in range(1000):
                 status = train_env.current_time_step();
                 action = random_policy.action(status);
@@ -79,7 +78,7 @@ def main():
         while not status.is_last():
             action = tf_agent.policy.action(status);
             status = eval_env.step(action.action);
-            cv2.imshow('cartpole', eval_env.pyenv().render());
+            cv2.imshow('cartpole', eval_env.pyenv.envs[0].render());
             cv2.waitKey(25);
 
 if __name__ == "__main__":
