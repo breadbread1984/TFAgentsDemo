@@ -10,7 +10,7 @@ def main():
     # environment
     eval_env = tf_py_environment.TFPyEnvironment(suite_gym.load('CartPole-v0'));
     # deserialize saved policy
-    saved_policy = tf.compat.v2.saved_model.load('checkpoint/policy_20000/');
+    saved_policy = tf.compat.v2.saved_model.load('checkpoints/policy_20000/');
     # apply policy and visialize
     total_return = 0.0;
     for _ in range(10):
@@ -20,7 +20,7 @@ def main():
             action = saved_policy.action(status);
             status = eval_env.step(action.action);
             cv2.imshow('cartpole', eval_env.pyenv.envs[0].render());
-            cv2.waitKey();
+            cv2.waitKey(25);
             episode_return += status.reward;
         total_return += episode_return;
     avg_return = total_return / 10;
