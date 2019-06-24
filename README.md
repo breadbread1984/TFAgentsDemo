@@ -1,6 +1,14 @@
 # TFAgentsDemo
 This demo shows how a reinforcement learning problem is solved by tensorflow agents
 
+## How to install tensorflow agents library
+
+install it with command
+
+```bash
+pip3 install tf-nightly tf-agents-nightly
+```
+
 ## How to train policy
 
 train the policy by running
