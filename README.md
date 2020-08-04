@@ -6,7 +6,7 @@ This demo shows how a reinforcement learning problem is solved by tensorflow age
 install it with command
 
 ```bash
-pip3 install tf-nightly tf-agents-nightly
+pip3 install tensorflow tf-agents-nightly
 ```
 
 ## How to train policy
