@@ -7,6 +7,7 @@ from tf_agents.agents.dqn import dqn_agent; # dqn agent
 from tf_agents.trajectories import trajectory; # trajectory
 from tf_agents.replay_buffers import tf_uniform_replay_buffer; # replay buffer
 from tf_agents.policies import random_tf_policy, policy_saver; # random policy
+from tf_agents.utils import common; # element_wise_squared_loss
 
 batch_size = 64;
 
@@ -26,7 +27,7 @@ def main():
         train_env.action_spec(),
         q_network = q_net,
         optimizer = optimizer,
-        td_errors_loss_fn = dqn_agent.element_wise_squared_loss);
+        td_errors_loss_fn = common.element_wise_squared_loss);
     # replay buffer 
     replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
         data_spec = tf_agent.collect_data_spec,
