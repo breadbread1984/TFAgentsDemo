@@ -5,7 +5,7 @@ from tf_agents.environments import tf_py_environment, suite_gym; # environment a
 from tf_agents.networks.actor_distribution_network import ActorDistributionNetwork; # network structure
 from tf_agents.networks.value_network import ValueNetwork; # network structure
 from tf_agents.agents.ppo import ppo_agent; # ppo agent
-from tf_agents.trajectories import trajectory; # trajectory
+from tf_agents.trajectories import time_step, trajectory; # trajectory
 from tf_agents.replay_buffers import tf_uniform_replay_buffer; # replay buffer
 from tf_agents.policies import random_tf_policy, policy_saver; # random policy
 from tf_agents.utils import common; # element_wise_squared_loss
@@ -20,7 +20,7 @@ def main():
   # create agent
   optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate = 1e-3);
   tf_agent = ppo_agent.PPOAgent(
-    train_env.observation_spec(),
+    time_step.time_step_spec(train_env.observation_spec()),
     train_env.action_spec(),
     optimizer = optimizer,
     actor_net = ActorDistributionNetwork(train_env.observation_spec(), train_env.action_spec()),
