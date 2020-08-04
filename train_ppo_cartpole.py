@@ -2,7 +2,7 @@
 
 import tensorflow as tf;
 from tf_agents.environments import tf_py_environment, suite_gym; # environment and problem
-from tf_agents.networks.categorical_projection_network import CategoricalProjectionNetwork; # network structure
+from tf_agents.networks.actor_distribution_network import ActorDistributionNetwork; # network structure
 from tf_agents.networks.value_network import ValueNetwork; # network structure
 from tf_agents.agents.ppo import ppo_agent; # ppo agent
 from tf_agents.trajectories import trajectory; # trajectory
@@ -23,7 +23,7 @@ def main():
     train_env.observation_spec(),
     train_env.action_spec(),
     optimizer = optimizer,
-    actor_net = CategoricalProjectionNetwork(train_env.action_spec()),
+    actor_net = ActorDistributionNetwork(train_env.observation_spec(), train_env.action_spec()),
     value_net = ValueNetwork(train_env.observation_spec()),
     normalize_observations = False,
     use_gae = True,
