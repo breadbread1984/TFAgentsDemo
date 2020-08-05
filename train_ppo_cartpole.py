@@ -42,10 +42,7 @@ def main():
   # shape = batch x 2 x 
   dataset = replay_buffer.gather_all();
   # policy saver
-  saver = policy_saver.PolicySaver(
-    tf_agent.policy, 
-    train_step = tf.compat.v1.train.get_or_create_global_step()
-  );
+  saver = policy_saver.PolicySaver(tf_agent.policy);
   # define trajectory collector
   episode_count = tf_metrics.NumberOfEpisodes();
   total_steps = tf_metrics.EnvironmentSteps();
@@ -65,18 +62,17 @@ def main():
   );
   # training
   while total_steps.result() < 25000000:
-    global_step = tf.compat.v1.train.get_or_create_global_step();
+    global_step = tf_agent.train_step_counter.numpy();
     train_driver.run();
     trajectories = replay_buffer.gather_all();
     loss, _ = tf_agent.train(experience = trajectories);
     replay_buffer.clear(); # clear collected episodes right after training
-    if tf.compat.v1.train.get_or_create_global_step() % 500 == 0:
+    if tf_agent.train_step_counter.numpy() % 500 == 0:
       # save checkpoint
       saver.save('checkpoints/policy_%d' % tf_agent.train_step_counter.numpy());
-      # evaluate updated model
+      # evaluate the updated policy
       avg_reward.reset();
       avg_episode_len.reset();
-      # evaluate current policy
       eval_driver = dynamic_episode_driver.DynamicEpisodeDriver(
         eval_env,
         tf_agent.policy,
@@ -87,7 +83,7 @@ def main():
         num_episodes = 30, # how many epsiodes are collected in an iteration
       );
       eval_driver.run();
-      print('step = {0}: Average Return = {1} Average Episode Length = {2}'.format(tf.compat.v1.train.get_or_create_global_step(), avg_reward.result(), avg_episode_len.result()));
+      print('step = {0}: Average Return = {1} Average Episode Length = {2}'.format(tf_agent.train_step_counter.numpy(), avg_reward.result(), avg_episode_len.result()));
   # play cartpole for the last 3 times and visualize
   import cv2;
   for _ in range(3):
