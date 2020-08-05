@@ -61,7 +61,6 @@ def main():
   );
   # training
   while total_steps.result() < 25000000:
-    global_step = tf_agent.train_step_counter.numpy();
     train_driver.run();
     trajectories = replay_buffer.gather_all();
     loss, _ = tf_agent.train(experience = trajectories);
