@@ -29,8 +29,7 @@ def main():
     normalize_observations = False,
     normalize_rewards = False,
     use_gae = True,
-    num_epochs = 25,
-    train_step_counter = tf.compat.v1.train.get_or_create_global_step()
+    num_epochs = 25
   );
   tf_agent.initialize();
   # replay buffer
