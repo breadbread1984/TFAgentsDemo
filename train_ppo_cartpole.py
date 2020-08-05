@@ -40,8 +40,6 @@ def main():
     batch_size = train_env.batch_size,
     max_length = 1000000
   );
-  # shape = batch x 2 x 
-  dataset = replay_buffer.gather_all();
   # policy saver
   saver = policy_saver.PolicySaver(tf_agent.policy);
   # define trajectory collector
