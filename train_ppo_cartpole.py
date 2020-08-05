@@ -65,6 +65,8 @@ def main():
     trajectories = replay_buffer.gather_all();
     loss, _ = tf_agent.train(experience = trajectories);
     replay_buffer.clear(); # clear collected episodes right after training
+    if tf_agent.train_step_counter.numpy() % 50 == 0:
+      print('step = {0}: loss = {1}'.format(tf_agent.train_step_counter.numpy(), loss));
     if tf_agent.train_step_counter.numpy() % 500 == 0:
       # save checkpoint
       saver.save('checkpoints/policy_%d' % tf_agent.train_step_counter.numpy());
