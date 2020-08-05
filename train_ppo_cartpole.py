@@ -19,13 +19,15 @@ def main():
   train_env = tf_py_environment.TFPyEnvironment(suite_gym.load('CartPole-v0'));
   eval_env = tf_py_environment.TFPyEnvironment(suite_gym.load('CartPole-v0'));
   # create agent
+  actor_net = ActorDistributionRnnNetwork(train_env.observation_spec(), train_env.action_spec(), lstm_size = (100, 100));
+  value_net = ValueRnnNetwork(train_env.observation_spec());
   optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate = 1e-3);
   tf_agent = ppo_agent.PPOAgent(
     train_env.time_step_spec(),
     train_env.action_spec(),
     optimizer = optimizer,
-    actor_net = ActorDistributionRnnNetwork(train_env.observation_spec(), train_env.action_spec(), lstm_size = (100, 100)),
-    value_net = ValueRnnNetwork(train_env.observation_spec()),
+    actor_net = actor_net,
+    value_net = value_net,
     normalize_observations = False,
     normalize_rewards = False,
     use_gae = True,
