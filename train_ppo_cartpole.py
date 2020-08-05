@@ -68,6 +68,14 @@ def main():
   while total_steps.result() < 25000000:
     global_step = tf.compat.v1.train.get_or_create_global_step();
     if global_step % 500 == 0:
+    train_driver.run();
+    trajectories = replay_buffer.gather_all();
+    loss, _ = tf_agent.train(experience = trajectories);
+    replay_buffer.clear(); # clear collected episodes right after training
+    if tf.compat.v1.train.get_or_create_global_step() % 500 == 0:
+      # save checkpoint
+      saver.save('checkpoints/policy_%d' % tf_agent.train_step_counter.numpy());
+      # evaluate updated model
       avg_reward.reset();
       avg_episode_len.reset();
       # evaluate current policy
@@ -82,13 +90,6 @@ def main():
       );
       eval_driver.run();
       print('step = {0}: Average Return = {1} Average Episode Length = {2}'.format(tf.compat.v1.train.get_or_create_global_step(), avg_reward.result(), avg_episode_len.result()));
-    train_driver.run();
-    trajectories = replay_buffer.gather_all();
-    loss, _ = tf_agent.train(experience = trajectories);
-    replay_buffer.clear(); # clear collected episodes right after training
-    if tf.compat.v1.train.get_or_create_global_step() % 500 == 0:
-      saver.save('checkpoints/policy_%d' % tf_agent.train_step_counter.numpy());
-  # TODO
   # play cartpole for the last 3 times and visualize
   import cv2;
   for _ in range(3):
