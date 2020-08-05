@@ -25,7 +25,7 @@ def main():
     train_env.time_step_spec(),
     train_env.action_spec(),
     optimizer = optimizer,
-    actor_net = ActorDistributionRnnNetwork(train_env.observation_spec(), train_env.action_spec()),
+    actor_net = ActorDistributionRnnNetwork(train_env.observation_spec(), train_env.action_spec(), lstm_size = (100, 100)),
     value_net = ValueRnnNetwork(train_env.observation_spec()),
     normalize_observations = False,
     normalize_rewards = False,
@@ -35,7 +35,7 @@ def main():
   );
   tf_agent.initialize();
   # replay buffer
-  replay_buffer = tf.tf_uniform_replay_buffer.TFUniformReplayBuffer(
+  replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
     tf_agent.collect_data_spec,
     batch_size = train_env.batch_size,
     max_length = 1000000
