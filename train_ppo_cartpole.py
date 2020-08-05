@@ -4,7 +4,6 @@ import tensorflow as tf;
 from tf_agents.drivers import dynamic_episode_driver; # data collection driver
 from tf_agents.environments import tf_py_environment, suite_gym; # environment and problem
 from tf_agents.metrics import tf_metrics; # all kinds of metrics
-from tf_agents.eval import metric_utils; # metric utilities
 from tf_agents.networks.actor_distribution_rnn_network import ActorDistributionRnnNetwork;
 from tf_agents.networks.value_rnn_network import ValueRnnNetwork; # network structure
 from tf_agents.agents.ppo import ppo_agent; # ppo agent
