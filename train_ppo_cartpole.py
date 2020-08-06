@@ -49,8 +49,8 @@ def main(_):
   # define trajectory collector
   episode_count = tf_metrics.NumberOfEpisodes();
   total_steps = tf_metrics.EnvironmentSteps();
-  avg_reward = tf_metrics.AverageReturnMetric(batch_size = train_env.batch_size);
-  avg_episode_len = tf_metrics.AverageEpisodeLengthMetric(batch_size = train_env.batch_size);
+  avg_reward = tf_metrics.AverageReturnMetric(buffer_size_size = 30);
+  avg_episode_len = tf_metrics.AverageEpisodeLengthMetric(buffer_size = 30);
   train_driver = dynamic_episode_driver.DynamicEpisodeDriver(
     train_env,
     tf_agent.collect_policy, # rollout policy
