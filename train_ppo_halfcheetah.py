@@ -94,9 +94,11 @@ def main(_):
   import cv2;
   for _ in range(3):
     status = eval_env.reset();
+    policy_state = tf_agent.policy.get_initial_state(eval_env.batch_size);
     while not status.is_last():
-      action = tf_agent.policy.action(status);
+      action = tf_agent.policy.action(status, policy_state);
       status = eval_env.step(action.action);
+      policy_state = action.state;
       cv2.imshow('cartpole', eval_env.pyenv.envs[0].render());
       cv2.waitKey(25);
 
