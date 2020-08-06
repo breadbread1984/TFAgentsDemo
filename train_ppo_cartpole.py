@@ -47,24 +47,26 @@ def main(_):
   # policy saver
   saver = policy_saver.PolicySaver(tf_agent.policy);
   # define trajectory collector
-  episode_count = tf_metrics.NumberOfEpisodes();
-  total_steps = tf_metrics.EnvironmentSteps();
-  avg_reward = tf_metrics.AverageReturnMetric(buffer_size = 30);
-  avg_episode_len = tf_metrics.AverageEpisodeLengthMetric(buffer_size = 30);
+  train_episode_count = tf_metrics.NumberOfEpisodes();
+  train_total_steps = tf_metrics.EnvironmentSteps();
+  train_avg_reward = tf_metrics.AverageReturnMetric(batch_size = train_env.batch_size);
+  train_avg_episode_len = tf_metrics.AverageEpisodeLengthMetric(batch_size = train_env.batch_size);
   train_driver = dynamic_episode_driver.DynamicEpisodeDriver(
     train_env,
     tf_agent.collect_policy, # rollout policy
     observers = [
       replay_buffer.add_batch,
-      episode_count,
-      total_steps,
-      avg_reward,
-      avg_episode_len
+      train_episode_count,
+      train_total_steps,
+      train_avg_reward,
+      train_avg_episode_len
     ], # callbacks when an episode is completely collected
     num_episodes = 30, # how many episodes are collected in an iteration
   );
   # training
-  while total_steps.result() < 25000000:
+  eval_avg_reward = tf_metrics.AverageReturnMetric(buffer_size = 30);
+  eval_avg_episode_len = tf_metrics.AverageEpisodeLengthMetric(buffer_size = 30);
+  while train_total_steps.result() < 25000000:
     train_driver.run();
     trajectories = replay_buffer.gather_all();
     loss, _ = tf_agent.train(experience = trajectories);
@@ -75,19 +77,19 @@ def main(_):
       # save checkpoint
       saver.save('checkpoints/policy_%d' % tf_agent.train_step_counter.numpy());
       # evaluate the updated policy
-      avg_reward.reset();
-      avg_episode_len.reset();
+      eval_avg_reward.reset();
+      eval_avg_episode_len.reset();
       eval_driver = dynamic_episode_driver.DynamicEpisodeDriver(
         eval_env,
         tf_agent.policy,
         observers = [
-          avg_reward,
-          avg_episode_len,
+          eval_avg_reward,
+          eval_avg_episode_len,
         ],
         num_episodes = 30, # how many epsiodes are collected in an iteration
       );
       eval_driver.run();
-      print('step = {0}: Average Return = {1} Average Episode Length = {2}'.format(tf_agent.train_step_counter.numpy(), avg_reward.result(), avg_episode_len.result()));
+      print('step = {0}: Average Return = {1} Average Episode Length = {2}'.format(tf_agent.train_step_counter.numpy(), train_avg_reward.result(), train_avg_episode_len.result()));
   # play cartpole for the last 3 times and visualize
   import cv2;
   for _ in range(3):
