@@ -1,5 +1,5 @@
 tensorflow
 tf-agent-nightly
 tfp-nightly
+gym
 mujoco_py
-
