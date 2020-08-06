@@ -4,7 +4,7 @@ import functools;
 from absl import app;
 import tensorflow as tf;
 from tf_agents.drivers import dynamic_episode_driver; # data collection driver
-from tf_agents.environments import tf_py_environment, suite_gym; # environment and problem
+from tf_agents.environments import tf_py_environment, suite_mujoco; # environment and problem
 from tf_agents.environments.parallel_py_environment import ParallelPyEnvironment; # multiple workers
 from tf_agents.system import system_multiprocessing as multiprocessing; # every worker works on a signle process
 from tf_agents.metrics import tf_metrics; # all kinds of metrics
@@ -20,8 +20,8 @@ batch_size = 64; # how many workers
 def main(_):
 
   # environment serves as the dataset in reinforcement learning
-  train_env = tf_py_environment.TFPyEnvironment(ParallelPyEnvironment([lambda: suite_gym.load('CartPole-v0')] * batch_size));
-  eval_env = tf_py_environment.TFPyEnvironment(suite_gym.load('CartPole-v0'));
+  train_env = tf_py_environment.TFPyEnvironment(ParallelPyEnvironment([lambda: suite_mujoco.load('HalfCheetah-v2')] * batch_size));
+  eval_env = tf_py_environment.TFPyEnvironment(suite_mujoco.load('HalfCheetah-v2'));
   # create agent
   actor_net = ActorDistributionRnnNetwork(train_env.observation_spec(), train_env.action_spec(), lstm_size = (100, 100));
   value_net = ValueRnnNetwork(train_env.observation_spec());
