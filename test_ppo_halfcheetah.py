@@ -16,8 +16,10 @@ def main():
   for _ in range(10):
     status = eval_env.reset();
     episode_return = 0.0;
+    time_step = eval_env.reset();
+    policy_state = saved_policy.get_initial_state(eval_env.batch_size);
     while not status.is_last():
-      action = saved_policy.action(status);
+      action = saved_policy.action(time_step, policy_state);
       status = eval_env.step(action.action);
       cv2.imshow('halfcheetah', eval_env.pyenv.envs[0].render());
       cv2.waitKey(25);
