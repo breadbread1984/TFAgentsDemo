@@ -11,7 +11,7 @@ def main():
     eval_env = tf_py_environment.TFPyEnvironment(suite_gym.load('CartPole-v0'));
     # deserialize saved policy
     saved_policy = tf.compat.v2.saved_model.load('checkpoints/policy_20000/');
-    # apply policy and visialize
+    # apply policy and visualize
     total_return = 0.0;
     for _ in range(10):
         status = eval_env.reset();
