@@ -99,7 +99,7 @@ def main(_):
       action = tf_agent.policy.action(status, policy_state);
       status = eval_env.step(action.action);
       policy_state = action.state;
-      cv2.imshow('cartpole', eval_env.pyenv.envs[0].render());
+      cv2.imshow('halfcheetah', eval_env.pyenv.envs[0].render());
       cv2.waitKey(25);
 
 if __name__ == "__main__":
