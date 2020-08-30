@@ -53,7 +53,7 @@ def main(_):
   train_avg_episode_len = tf_metrics.AverageEpisodeLengthMetric(batch_size = train_env.batch_size);
   train_driver = dynamic_episode_driver.DynamicEpisodeDriver(
     train_env,
-    tf_agent.collect_policy, # rollout policy
+    tf_agent.collect_policy, # NOTE: use PPOPolicy to collect episode
     observers = [
       replay_buffer.add_batch,
       train_episode_count,
@@ -81,7 +81,7 @@ def main(_):
       eval_avg_episode_len.reset();
       eval_driver = dynamic_episode_driver.DynamicEpisodeDriver(
         eval_env,
-        tf_agent.collect_policy, # NOTE: use PPOPolicy to collect episode
+        tf_agent.policy,
         observers = [
           eval_avg_reward,
           eval_avg_episode_len,
