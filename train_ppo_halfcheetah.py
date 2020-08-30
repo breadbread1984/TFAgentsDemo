@@ -81,7 +81,7 @@ def main(_):
       eval_avg_episode_len.reset();
       eval_driver = dynamic_episode_driver.DynamicEpisodeDriver(
         eval_env,
-        tf_agent.policy,
+        tf_agent.collect_policy, # NOTE: use PPOPolicy to collect episode
         observers = [
           eval_avg_reward,
           eval_avg_episode_len,
@@ -96,7 +96,7 @@ def main(_):
     status = eval_env.reset();
     policy_state = tf_agent.policy.get_initial_state(eval_env.batch_size);
     while not status.is_last():
-      action = tf_agent.policy.action(status, policy_state);
+      action = tf_agent.policy.action(status, policy_state); # NOTE: use greedy policy to test
       status = eval_env.step(action.action);
       policy_state = action.state;
       cv2.imshow('halfcheetah', eval_env.pyenv.envs[0].render());
