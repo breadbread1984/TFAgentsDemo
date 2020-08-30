@@ -10,7 +10,7 @@ def main():
   # environment
   eval_env = tf_py_environment.TFPyEnvironment(suite_mujoco.load('HalfCheetah-v2'));
   # deserialize saved policy
-  saved_policy = tf.compat.v2.saved_model.load('checkpoints/policy_1000/');
+  saved_policy = tf.compat.v2.saved_model.load('checkpoints/policy_9500/');
   # apply_policy and visualize
   total_return = 0.0;
   for _ in range(10):
